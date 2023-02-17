@@ -2,13 +2,25 @@ import "./style.css";
 
 import * as THREE from "three";
 import gsap from "gsap";
+import { OrthographicCamera } from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 console.log(THREE);
-console.log(gsap);
+console.log(OrbitControls);
+
+// CURSOR
+const cursor = {
+	x: 0,
+	y: 0,
+};
+window.addEventListener("mousemove", (event) => {
+	cursor.x = event.clientX / sizes.width - 0.5;
+	cursor.y = -(event.clientY / sizes.height - 0.5); // THE NEGATIVE IS TO INVERT THE AXIS
+});
 
 // SCENE
 const scene = new THREE.Scene();
-const canvas = document.querySelector(".webgl");
+const canvas: HTMLElement = document.querySelector(".webgl")!;
 
 // GROUP
 // const group = new THREE.Group();
@@ -36,41 +48,58 @@ const canvas = document.querySelector(".webgl");
 // group.add(cube3);
 
 // CUBE
-const geometry = new THREE.BoxGeometry(1, 1, 1);
+const geometry = new THREE.BoxGeometry(1, 1, 1, 5, 5, 5);
 const material = new THREE.MeshBasicMaterial({
 	color: "#FFC0CB",
 });
 
 // MESH
 const mesh = new THREE.Mesh(geometry, material);
-mesh.position.set(0.8, -0.5, 1);
+// mesh.position.set(0.8, -0.5, 1);
 scene.add(mesh);
 
 // AXES HELPER
 const axesHelper = new THREE.AxesHelper();
-scene.add(axesHelper);
+// scene.add(axesHelper);
 
 // CAMERA
 const sizes = {
 	width: 800,
 	height: 600,
 };
+const aspectRatio = sizes.width / sizes.height;
+
 const camera = new THREE.PerspectiveCamera(
-	75,
-	sizes.width / sizes.height,
-	0.1,
-	1000
+	75, // VERTICAL FOV IN DEGREES
+	aspectRatio, // ASPECT RATIO
+	0.1, // NEAR - HOW CLOSE THE CAMERA WILL BE
+	100 // FAR - HOW FAR THE CAMERA WILL BE
 );
 
+// CONTROLS
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+// controls.target.y = 2;
+// controls.update();
+
+// ORTHOGRAPHIC CAMERA SPECIFIES HOW FAR THE CAMERA CAN SEE IN EARCH DIRECTION
+// const camera = new OrthographicCamera(
+// 	-1 * aspectRatio, // LEFT
+// 	1 * aspectRatio, // RIGHT
+// 	1, // TOP
+// 	-1, // BOTTOM
+// 	0.1, // NEAR
+// 	100 // FAR
+// );
+
 // SETTING THE CAMERA POSITION
-camera.position.set(1, 1, 4);
+camera.position.set(0, 0, 3);
 scene.add(camera);
 
 camera.lookAt(mesh.position);
-console.log(mesh.position.distanceTo(camera.position));
 
 // SCALE
-mesh.scale.set(2, 0.5, 0.5);
+mesh.scale.set(1, 1, 1);
 
 // ROTATE
 mesh.rotation.reorder("YXZ"); // BEFORE CHANGING THE ROTATION
@@ -91,11 +120,12 @@ let time = Date.now();
 
 // ANIMATIONS
 
-gsap.to(mesh.position, {
-	x: 2,
-	duration: 1,
-	delay: 1,
-});
+// GSAP
+// gsap.to(mesh.position, {
+// 	x: 2,
+// 	duration: 1,
+// 	delay: 1,
+// });
 
 // CLOCK
 const clock = new THREE.Clock();
@@ -112,9 +142,18 @@ const tick = () => {
 	// console.log(deltaTime);
 
 	// Making sure our object moves at a different speed then our frame rate
-	mesh.rotation.x = Math.sin(elapsedTime);
+	// mesh.rotation.z = Math.sin(elapsedTime);
 	mesh.rotation.y = Math.cos(elapsedTime);
-	// Render
+
+	// UPDATE CAMERA
+	// camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3;
+	// camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
+	// camera.position.y = cursor.y * 5;
+	// camera.lookAt(mesh.position);
+
+	// UPDATE CONTROLS
+	controls.update;
+	// RENDER
 	renderer.render(scene, camera);
 	window.requestAnimationFrame(tick);
 };

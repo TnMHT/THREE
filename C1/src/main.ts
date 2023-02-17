@@ -48,9 +48,31 @@ const canvas: HTMLElement = document.querySelector(".webgl")!;
 // group.add(cube3);
 
 // CUBE
-const geometry = new THREE.BoxGeometry(1, 1, 1, 5, 5, 5);
+
+// const geometry = new THREE.BoxGeometry(
+// 	1, // WIDTH
+// 	1, // HEIGHT
+// 	1, // DEPTH
+// 	5, // WIDTH SEGMENTS
+// 	5, // HEIGHT SEGMENTS
+// 	5 // DEPTH SEGMENTS
+// );
+
+const geometry = new THREE.BufferGeometry();
+
+const count = 500;
+const positionsArray = new Float32Array(count * 3 * 3);
+
+for (let i = 0; i < count * 3 * 3; i++) {
+	positionsArray[i] = Math.random() - 0.5;
+}
+
+const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3);
+geometry.setAttribute("position", positionsAttribute);
+
 const material = new THREE.MeshBasicMaterial({
 	color: "#535bf2",
+	wireframe: true,
 });
 
 // MESH
@@ -60,13 +82,14 @@ scene.add(mesh);
 
 // AXES HELPER
 const axesHelper = new THREE.AxesHelper();
-// scene.add(axesHelper);
+scene.add(axesHelper);
 
 // CAMERA
 const sizes = {
 	width: window.innerWidth,
 	height: window.innerHeight,
 };
+// RESIZE CAMERA
 window.addEventListener("resize", () => {
 	// UPDATE SIZES
 	sizes.width = window.innerWidth;
@@ -81,6 +104,7 @@ window.addEventListener("resize", () => {
 	renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
+// DOUBLE CLICK FOR FULL SCREEN
 window.addEventListener("dblclick", () => {
 	const fullscreenElement =
 		document.fullscreenElement || document.webkitFullscreenElement;
@@ -175,7 +199,7 @@ const tick = () => {
 
 	// Making sure our object moves at a different speed then our frame rate
 	// mesh.rotation.z = Math.sin(elapsedTime);
-	mesh.rotation.y = Math.cos(elapsedTime);
+	// mesh.rotation.y = Math.cos(elapsedTime);
 
 	// UPDATE CAMERA
 	// camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3;

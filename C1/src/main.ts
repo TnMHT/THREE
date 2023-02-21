@@ -1,7 +1,7 @@
 import "./style.css";
 
 import * as THREE from "three";
-import * as dat from 'lil-gui'
+import * as dat from "lil-gui";
 import gsap from "gsap";
 import { OrthographicCamera } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -9,24 +9,35 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 console.log(THREE);
 console.log(dat);
 
+// TEXTURES
+
+const loadingManager = new THREE.LoadingManager();
+loadingManager.onStart = () => {
+	console.log("start");
+};
+loadingManager.onLoad = () => {
+	console.log("load");
+};
+loadingManager.onProgress = () => {};
+loadingManager.onError = () => {};
+const textureLoader = new THREE.TextureLoader(loadingManager);
+const colorTexture = textureLoader.load("/static/textures/jmb.jpg");
+
 // DEBUG
 
-const gui = new dat.GUI()
+const gui = new dat.GUI();
 const debugObject = {
 	color: 0x53f288,
 	spin: () => {
-		gsap.to(mesh.rotation, {y:mesh.rotation.y + 10, duration:1})
-	}
-}
+		gsap.to(mesh.rotation, { y: mesh.rotation.y + 10, duration: 1 });
+	},
+};
 
-gui
-	.addColor(debugObject, 'color')
-	.onChange(() => {
-		material.color.set(debugObject.color)
-	})
+gui.addColor(debugObject, "color").onChange(() => {
+	material.color.set(debugObject.color);
+});
 
-gui
-	.add(debugObject, 'spin')	
+gui.add(debugObject, "spin");
 
 // CURSOR
 const cursor = {
@@ -79,8 +90,9 @@ const canvas: HTMLElement = document.querySelector(".webgl")!;
 // );
 
 const geometry = new THREE.BufferGeometry();
+console.log(geometry.attributes);
 
-const count = 500;
+const count = 100;
 const positionsArray = new Float32Array(count * 3 * 3);
 
 for (let i = 0; i < count * 3 * 3; i++) {
@@ -90,10 +102,7 @@ for (let i = 0; i < count * 3 * 3; i++) {
 const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3);
 geometry.setAttribute("position", positionsAttribute);
 
-const material = new THREE.MeshBasicMaterial({
-	color: "#535bf2",
-	wireframe: true,
-});
+const material = new THREE.MeshBasicMaterial({ map: colorTexture });
 
 // MESH
 const mesh = new THREE.Mesh(geometry, material);
@@ -101,22 +110,13 @@ const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
 
 // DEBUG - ADDING CONTROLS
-gui
-	.add(mesh.position, 'y')
-	.min(-1)
-	.max(3)
-	.step(0.01)
-	.name('Elevation')
+gui.add(mesh.position, "y").min(-1).max(3).step(0.01).name("Elevation");
 
-gui
-	.add(mesh, 'visible')
+gui.add(mesh, "visible");
 
-gui
-	.add(material, 'wireframe')
+gui.add(material, "wireframe");
 
-
-
-// AXES HELPER
+// AXES HELPER,
 const axesHelper = new THREE.AxesHelper();
 scene.add(axesHelper);
 

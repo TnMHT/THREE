@@ -1,12 +1,32 @@
 import "./style.css";
 
 import * as THREE from "three";
+import * as dat from 'lil-gui'
 import gsap from "gsap";
 import { OrthographicCamera } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 console.log(THREE);
-console.log(OrbitControls);
+console.log(dat);
+
+// DEBUG
+
+const gui = new dat.GUI()
+const debugObject = {
+	color: 0x53f288,
+	spin: () => {
+		gsap.to(mesh.rotation, {y:mesh.rotation.y + 10, duration:1})
+	}
+}
+
+gui
+	.addColor(debugObject, 'color')
+	.onChange(() => {
+		material.color.set(debugObject.color)
+	})
+
+gui
+	.add(debugObject, 'spin')	
 
 // CURSOR
 const cursor = {
@@ -79,6 +99,22 @@ const material = new THREE.MeshBasicMaterial({
 const mesh = new THREE.Mesh(geometry, material);
 // mesh.position.set(0.8, -0.5, 1);
 scene.add(mesh);
+
+// DEBUG - ADDING CONTROLS
+gui
+	.add(mesh.position, 'y')
+	.min(-1)
+	.max(3)
+	.step(0.01)
+	.name('Elevation')
+
+gui
+	.add(mesh, 'visible')
+
+gui
+	.add(material, 'wireframe')
+
+
 
 // AXES HELPER
 const axesHelper = new THREE.AxesHelper();

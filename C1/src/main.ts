@@ -1,22 +1,22 @@
-import "./style.css";
+import './style.css';
 
-import * as THREE from "three";
-import * as dat from "lil-gui";
-import gsap from "gsap";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import * as THREE from 'three';
+import * as dat from 'lil-gui';
+// import gsap from 'gsap';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 // TEXTURES
 const loadingManager = new THREE.LoadingManager();
 loadingManager.onStart = () => {
-	console.log("start");
+	console.log('start');
 };
 loadingManager.onLoad = () => {
-	console.log("load");
+	console.log('load');
 };
 loadingManager.onProgress = () => {};
 loadingManager.onError = () => {};
 const textureLoader = new THREE.TextureLoader(loadingManager);
-const colorTexture = textureLoader.load("/static/textures/jmb.jpg");
+const colorTexture = textureLoader.load('/static/textures/jmb.jpg');
 
 // DEBUG
 
@@ -24,29 +24,29 @@ const gui = new dat.GUI();
 const debugObject = {
 	color: 0x53f288,
 	spin: () => {
-		gsap.to(mesh.rotation, { y: mesh.rotation.y + 10, duration: 1 });
+		// gsap.to(mesh.rotation, { y: mesh.rotation.y + 10, duration: 1 });
 	},
 };
 
-gui.addColor(debugObject, "color").onChange(() => {
+gui.addColor(debugObject, 'color').onChange(() => {
 	material.color.set(debugObject.color);
 });
 
-gui.add(debugObject, "spin");
+gui.add(debugObject, 'spin');
 
 // CURSOR
 const cursor = {
 	x: 0,
 	y: 0,
 };
-window.addEventListener("mousemove", (event) => {
+window.addEventListener('mousemove', (event) => {
 	cursor.x = event.clientX / sizes.width - 0.5;
 	cursor.y = -(event.clientY / sizes.height - 0.5); // THE NEGATIVE IS TO INVERT THE AXIS
 });
 
 // SCENE
 const scene = new THREE.Scene();
-const canvas: HTMLElement = document.querySelector(".webgl")!;
+const canvas: HTMLElement = document.querySelector('.webgl')!;
 
 // GROUP
 // const group = new THREE.Group();
@@ -133,7 +133,7 @@ const sizes = {
 	height: window.innerHeight,
 };
 // RESIZE CAMERA
-window.addEventListener("resize", () => {
+window.addEventListener('resize', () => {
 	// UPDATE SIZES
 	sizes.width = window.innerWidth;
 	sizes.height = window.innerHeight;
@@ -148,25 +148,25 @@ window.addEventListener("resize", () => {
 });
 
 // DOUBLE CLICK FOR FULL SCREEN
-window.addEventListener("dblclick", () => {
-	const fullscreenElement =
-		document.fullscreenElement || document.webkitFullscreenElement;
+// window.addEventListener('dblclick', () => {
+// 	const fullscreenElement =
+// 		document.fullscreenElement || document.webkitFullscreenElement;
 
-	if (!fullscreenElement) {
-		if (canvas.requestFullscreen) {
-			canvas.requestFullscreen();
-		} else if (canvas.webkitRequestFullscreen) {
-			canvas.webkitRequestFullscreen();
-		}
-	} else {
-		if (document.exitFullscreen) {
-			document.exitFullscreen();
-		} else if (document.webkitExitFullscreen) {
-			document.webkitExitFullscreen();
-		}
-		document.exitFullscreen();
-	}
-});
+// 	if (!fullscreenElement) {
+// 		if (canvas.requestFullscreen) {
+// 			canvas.requestFullscreen();
+// 		} else if (canvas.webkitRequestFullscreen) {
+// 			canvas.webkitRequestFullscreen();
+// 		}
+// 	} else {
+// 		if (document.exitFullscreen) {
+// 			document.exitFullscreen();
+// 		} else if (document.webkitExitFullscreen) {
+// 			document.webkitExitFullscreen();
+// 		}
+// 		document.exitFullscreen();
+// 	}
+// });
 const aspectRatio = sizes.width / sizes.height;
 
 const camera = new THREE.PerspectiveCamera(
@@ -225,7 +225,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); //
 // 	duration: 1,
 // 	delay: 1,
 // });
-let time = Date.now();
+
 // CLOCK
 const clock = new THREE.Clock();
 

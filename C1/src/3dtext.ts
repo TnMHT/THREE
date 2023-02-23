@@ -15,11 +15,11 @@ scene.add(axesHelper);
 
 const fontLoader = new FontLoader();
 const textureLoader = new THREE.TextureLoader();
-const matcapTexture = textureLoader.load('static/matcaps/7.png');
+const matcapTexture = textureLoader.load('/7.png');
 
 fontLoader.load(
 	// resource URL
-	'static/fonts/Space-Grotesk-Light_Regular.json',
+	'/Space-Grotesk.json',
 
 	// onLoad callback
 	(font) => {
@@ -57,16 +57,6 @@ fontLoader.load(
 
 			scene.add(donut);
 		}
-	},
-
-	// onProgress callback
-	function (xhr) {
-		console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
-	},
-
-	// onError callback
-	function (err) {
-		console.log('An error happened');
 	}
 );
 

@@ -3,14 +3,9 @@ import "./style.css";
 import * as THREE from "three";
 import * as dat from "lil-gui";
 import gsap from "gsap";
-import { OrthographicCamera } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
-console.log(THREE);
-console.log(dat);
-
 // TEXTURES
-
 const loadingManager = new THREE.LoadingManager();
 loadingManager.onStart = () => {
 	console.log("start");
@@ -89,32 +84,44 @@ const canvas: HTMLElement = document.querySelector(".webgl")!;
 // 	5 // DEPTH SEGMENTS
 // );
 
-const geometry = new THREE.BufferGeometry();
-console.log(geometry.attributes);
+// const geometry = new THREE.BoxGeometry(1, 1, 1);
+// console.log(geometry.attributes);
 
-const count = 100;
-const positionsArray = new Float32Array(count * 3 * 3);
+// const count = 100;
+// const positionsArray = new Float32Array(count * 3 * 3);
 
-for (let i = 0; i < count * 3 * 3; i++) {
-	positionsArray[i] = Math.random() - 0.5;
-}
+// for (let i = 0; i < count * 3 * 3; i++) {
+// 	positionsArray[i] = Math.random() - 0.5;
+// }
 
-const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3);
-geometry.setAttribute("position", positionsAttribute);
+// const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3);
+// geometry.setAttribute("position", positionsAttribute);
 
+// const material = new THREE.MeshBasicMaterial({ map: colorTexture });
+
+// OBJECTS
 const material = new THREE.MeshBasicMaterial({ map: colorTexture });
+const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 16, 16), material);
+const plane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), material);
+const torus = new THREE.Mesh(
+	new THREE.TorusGeometry(0.3, 0.2, 16, 32),
+	material
+);
+
+scene.add(sphere, plane, torus);
+
+sphere.position.x = -1;
+torus.position.x = 1;
 
 // MESH
-const mesh = new THREE.Mesh(geometry, material);
+// const mesh = new THREE.Mesh(geometry, material);
 // mesh.position.set(0.8, -0.5, 1);
-scene.add(mesh);
+// scene.add(mesh);
 
 // DEBUG - ADDING CONTROLS
-gui.add(mesh.position, "y").min(-1).max(3).step(0.01).name("Elevation");
-
-gui.add(mesh, "visible");
-
-gui.add(material, "wireframe");
+// gui.add(mesh.position, "y").min(-1).max(3).step(0.01).name("Elevation");
+// gui.add(mesh, "visible");
+// gui.add(material, "wireframe");
 
 // AXES HELPER,
 const axesHelper = new THREE.AxesHelper();
@@ -189,16 +196,16 @@ controls.enableDamping = true;
 camera.position.set(0, 0, 3);
 scene.add(camera);
 
-camera.lookAt(mesh.position);
+// camera.lookAt(mesh.position);
 
 // SCALE
-mesh.scale.set(1, 1, 1);
+// mesh.scale.set(1, 1, 1);
 
 // ROTATE
-mesh.rotation.reorder("YXZ"); // BEFORE CHANGING THE ROTATION
-mesh.rotation.y = Math.PI / 2;
-mesh.rotation.x = Math.PI / 2;
-mesh.rotation.z = Math.PI / 2;
+// mesh.rotation.reorder("YXZ"); // BEFORE CHANGING THE ROTATION
+// mesh.rotation.y = Math.PI / 2;
+// mesh.rotation.x = Math.PI / 2;
+// mesh.rotation.z = Math.PI / 2;
 
 // QUATERNION
 
@@ -223,7 +230,18 @@ let time = Date.now();
 const clock = new THREE.Clock();
 
 const tick = () => {
+	// UPDATE OBJECTS
+
 	const elapsedTime = clock.getElapsedTime();
+
+	sphere.rotation.y = 0.1 * elapsedTime;
+	plane.rotation.y = 0.1 * elapsedTime;
+	torus.rotation.y = 0.1 * elapsedTime;
+
+	sphere.rotation.x = 0.2 * elapsedTime;
+	plane.rotation.x = 0.2 * elapsedTime;
+	torus.rotation.x = 0.2 * elapsedTime;
+
 	// console.log(elapsedTime);
 
 	// TIME

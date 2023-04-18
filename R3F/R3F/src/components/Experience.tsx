@@ -13,7 +13,7 @@ export default function Experience() {
 		cubeRef.current.rotation.x += delta;
 		//groupRef.current.rotation.y += delta;
 	});
-// console.log comment
+
 	return (
 		<>
 			{/* <OrbitControls /> */}
